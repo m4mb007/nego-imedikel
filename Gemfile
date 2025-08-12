@@ -24,7 +24,7 @@ gem "omniauth-apple", "~> 1.0"
 gem "pundit", "~> 2.3"
 
 # Payment Processing
-gem "stripe", "~> 12.0"
+gem "stripe", "~> 15.4"
 gem "pay", "~> 7.0"
 
 # File Upload and Image Processing
