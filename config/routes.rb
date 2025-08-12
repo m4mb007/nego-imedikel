@@ -8,11 +8,7 @@ Rails.application.routes.draw do
   get "categories/index"
   get "categories/show"
   # Devise routes
-  devise_for :users, controllers: {
-    registrations: 'users/registrations',
-    sessions: 'users/sessions',
-    omniauth_callbacks: 'users/omniauth_callbacks'
-  }
+  devise_for :users
 
   # Root route
   root 'home#index'
@@ -40,6 +36,7 @@ Rails.application.routes.draw do
       get 'new-arrivals'
       get 'on-sale'
     end
+    resources :reviews, only: [:new, :create]
   end
 
   # Categories
@@ -90,7 +87,7 @@ Rails.application.routes.draw do
   resources :addresses, except: [:show]
 
   # Reviews
-  resources :reviews, only: [:create, :update, :destroy]
+  resources :reviews, only: [:update, :destroy]
 
   # Stores
   resources :stores, only: [:index, :show] do
@@ -141,7 +138,7 @@ Rails.application.routes.draw do
     resources :orders, only: [:index, :show] do
       member do
         patch 'confirm'
-        patch 'process'
+        patch 'process_order'
         patch 'ship'
         patch 'deliver'
         patch 'cancel'

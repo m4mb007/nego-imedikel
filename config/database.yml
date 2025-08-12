@@ -22,7 +22,7 @@ default: &default
 
 development:
   <<: *default
-  database: nego_imedikel_development
+  database: imedikel_development
 
   # The specified database role being used to connect to PostgreSQL.
   # To create additional roles in PostgreSQL see `$ createuser --help`.
@@ -56,7 +56,7 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: nego_imedikel_test
+  database: imedikel_test
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -81,18 +81,18 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: nego_imedikel_production
-    username: nego_imedikel
-    password: <%= ENV["NEGO_IMEDIKEL_DATABASE_PASSWORD"] %>
+    database: imedikel_production
+    username: imedikel
+    password: <%= ENV["IMEDIKEL_DATABASE_PASSWORD"] %>
   cache:
     <<: *primary_production
-    database: nego_imedikel_production_cache
+    database: imedikel_production_cache
     migrations_paths: db/cache_migrate
   queue:
     <<: *primary_production
-    database: nego_imedikel_production_queue
+    database: imedikel_production_queue
     migrations_paths: db/queue_migrate
   cable:
     <<: *primary_production
-    database: nego_imedikel_production_cable
+    database: imedikel_production_cable
     migrations_paths: db/cable_migrate

@@ -1,0 +1,115 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <div class="bg-white shadow">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-6">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Edit Address</h1>
+          <p class="mt-1 text-sm text-gray-500">Update your address information</p>
+        </div>
+        <div class="flex items-center space-x-4">
+          <%= link_to addresses_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" do %>
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Addresses
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="bg-white shadow rounded-lg p-6">
+      <%= form_with(model: @address, local: true, class: "space-y-6") do |f| %>
+        <%= render 'shared/error_messages', resource: @address %>
+
+        <!-- Address Label -->
+        <div>
+          <%= f.label :label, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= f.text_field :label,
+              class: "block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500",
+              placeholder: "e.g., Home, Office, Vacation Home" %>
+        </div>
+
+                       <!-- Full Name -->
+               <div>
+                 <%= f.label :recipient_name, class: "block text-sm font-medium text-gray-700 mb-2" %>
+                 <%= f.text_field :recipient_name,
+                     class: "block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500",
+                     placeholder: "Full Name" %>
+               </div>
+
+               <!-- Street Address -->
+               <div>
+                 <%= f.label :address_line1, class: "block text-sm font-medium text-gray-700 mb-2" %>
+                 <%= f.text_field :address_line1,
+                     class: "block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500",
+                     placeholder: "Street Address" %>
+               </div>
+
+               <!-- Street Address 2 -->
+               <div>
+                 <%= f.label :address_line2, "Apartment, suite, etc. (optional)", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                 <%= f.text_field :address_line2,
+                     class: "block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500",
+                     placeholder: "Apartment, suite, etc." %>
+               </div>
+
+        <!-- City, State, Postal Code -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <%= f.label :city, class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= f.text_field :city,
+                class: "block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500",
+                placeholder: "City" %>
+          </div>
+          <div>
+            <%= f.label :state, class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= f.text_field :state,
+                class: "block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500",
+                placeholder: "State/Province" %>
+          </div>
+          <div>
+            <%= f.label :postal_code, class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= f.text_field :postal_code,
+                class: "block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500",
+                placeholder: "Postal Code" %>
+          </div>
+        </div>
+
+        <!-- Country -->
+        <div>
+          <%= f.label :country, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= f.select :country,
+              [['Malaysia', 'Malaysia'], ['Singapore', 'Singapore'], ['Indonesia', 'Indonesia'], ['Thailand', 'Thailand'], ['Philippines', 'Philippines'], ['Vietnam', 'Vietnam'], ['United States', 'United States'], ['United Kingdom', 'United Kingdom'], ['Canada', 'Canada'], ['Australia', 'Australia']],
+              { prompt: "Select Country" },
+              { class: "block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500" } %>
+        </div>
+
+        <!-- Phone -->
+        <div>
+          <%= f.label :phone, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= f.telephone_field :phone,
+              class: "block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500",
+              placeholder: "Phone Number" %>
+        </div>
+
+        <!-- Set as Default -->
+        <div class="flex items-center">
+          <%= f.check_box :is_default, class: "h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded" %>
+          <%= f.label :is_default, "Set as default address", class: "ml-2 block text-sm text-gray-900" %>
+        </div>
+
+        <!-- Submit Buttons -->
+        <div class="flex justify-end space-x-4">
+          <%= link_to "Cancel", addresses_path,
+              class: "px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+          <%= f.submit "Update Address",
+              class: "px-6 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 cursor-pointer" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

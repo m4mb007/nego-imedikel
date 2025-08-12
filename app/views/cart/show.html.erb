@@ -48,7 +48,7 @@
                   
                   <%= button_to cart_item_path(item), method: :delete, 
                       class: "text-red-500 hover:text-red-700", 
-                      data: { confirm: "Remove this item?" } do %>
+                      data: { turbo_confirm: "Remove this item?" } do %>
                     <i class="fas fa-trash"></i>
                   <% end %>
                 </div>

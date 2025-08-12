@@ -130,14 +130,16 @@
           <div class="space-y-4">
             <% if @product.in_stock? %>
               <div class="flex space-x-4">
-                <%= link_to add_to_cart_path(@product), method: :post,
+                <%= link_to add_to_cart_product_path(@product), 
+                    data: { turbo_method: :post },
                     class: "flex-1 bg-green-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-green-700 text-center" do %>
                   <i class="fas fa-shopping-cart mr-2"></i>
                   Add to Cart
                 <% end %>
                 
                 <% if user_signed_in? %>
-                  <%= link_to add_to_wishlist_path(@product), method: :post,
+                  <%= link_to add_to_wishlist_product_path(@product), 
+                      data: { turbo_method: :post },
                       class: "bg-gray-100 text-gray-700 p-3 rounded-lg hover:bg-gray-200",
                       title: "Add to Wishlist" do %>
                     <i class="fas fa-heart"></i>

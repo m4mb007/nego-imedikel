@@ -70,6 +70,9 @@ class ProductsController < ApplicationController
                       .page(params[:page])
                       .per(20)
     
+    @categories = Category.active.root_categories.ordered
+    @brands = Product.active.distinct.pluck(:brand).compact.sort
+    
     render :index
   end
 
@@ -81,6 +84,9 @@ class ProductsController < ApplicationController
                       .page(params[:page])
                       .per(20)
     
+    @categories = Category.active.root_categories.ordered
+    @brands = Product.active.distinct.pluck(:brand).compact.sort
+    
     render :index
   end
 
@@ -91,7 +97,83 @@ class ProductsController < ApplicationController
                       .page(params[:page])
                       .per(20)
     
+    @categories = Category.active.root_categories.ordered
+    @brands = Product.active.distinct.pluck(:brand).compact.sort
+    
     render :index
+  end
+
+  def add_to_cart
+    @product = Product.friendly.find(params[:id])
+    
+    unless user_signed_in?
+      flash[:alert] = "Please sign in to add items to your cart."
+      redirect_to new_user_session_path
+      return
+    end
+    
+    if @product.in_stock?
+      # Check if item already exists in cart
+      existing_cart_item = current_user.cart_items.find_by(product: @product)
+      
+      if existing_cart_item
+        existing_cart_item.update(quantity: existing_cart_item.quantity + 1)
+        flash[:notice] = "#{@product.name} quantity updated in cart!"
+      else
+        current_user.cart_items.create!(
+          product: @product,
+          quantity: 1
+        )
+        flash[:notice] = "#{@product.name} added to cart successfully!"
+      end
+    else
+      flash[:alert] = "Sorry, this product is out of stock."
+    end
+    
+    redirect_back(fallback_location: product_path(@product))
+  end
+
+  def add_to_wishlist
+    @product = Product.friendly.find(params[:id])
+    
+    unless user_signed_in?
+      flash[:alert] = "Please sign in to add items to your wishlist."
+      redirect_to new_user_session_path
+      return
+    end
+    
+    # Check if item already exists in wishlist
+    existing_wishlist_item = current_user.wishlist_items.find_by(product: @product)
+    
+    if existing_wishlist_item
+      flash[:notice] = "#{@product.name} is already in your wishlist!"
+    else
+      current_user.wishlist_items.create!(product: @product)
+      flash[:notice] = "#{@product.name} added to wishlist successfully!"
+    end
+    
+    redirect_back(fallback_location: product_path(@product))
+  end
+
+  def remove_from_wishlist
+    @product = Product.friendly.find(params[:id])
+    
+    unless user_signed_in?
+      flash[:alert] = "Please sign in to manage your wishlist."
+      redirect_to new_user_session_path
+      return
+    end
+    
+    wishlist_item = current_user.wishlist_items.find_by(product: @product)
+    
+    if wishlist_item
+      wishlist_item.destroy
+      flash[:notice] = "#{@product.name} removed from wishlist."
+    else
+      flash[:alert] = "Item not found in wishlist."
+    end
+    
+    redirect_back(fallback_location: product_path(@product))
   end
 
   private

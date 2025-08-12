@@ -1,4 +1,4 @@
-class CartController < ApplicationController
+class CartsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_cart_items
 
@@ -20,6 +20,6 @@ class CartController < ApplicationController
 
   def set_cart_items
     @cart_items = current_user.cart_items.includes(:product, :product_variant)
-    @cart_total = @cart_items.sum { |item| item.quantity * (item.product_variant&.price || item.product.price) }
+    @cart_total = @cart_items.sum(&:total_price)
   end
 end
