@@ -1,0 +1,229 @@
+<div class="bg-gray-50 min-h-screen">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Store Header -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-8">
+      <!-- Store Banner -->
+      <div class="h-48 bg-gradient-to-r from-green-400 to-green-600 relative">
+        <% if @store.banner.attached? %>
+          <%= image_tag @store.banner, class: "w-full h-full object-cover" %>
+        <% end %>
+        
+        <!-- Store Logo -->
+        <div class="absolute -bottom-12 left-8">
+          <div class="w-24 h-24 bg-white rounded-lg shadow-sm border-4 border-white overflow-hidden">
+            <% if @store.logo.attached? %>
+              <%= image_tag @store.logo, class: "w-full h-full object-cover" %>
+            <% else %>
+              <div class="w-full h-full bg-green-100 flex items-center justify-center">
+                <i class="fas fa-store text-green-600 text-3xl"></i>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Store Info -->
+      <div class="pt-16 pb-6 px-8">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+          <div class="flex-1">
+            <div class="flex items-center mb-2">
+              <h1 class="text-3xl font-bold text-gray-900 mr-4"><%= @store.name %></h1>
+              <% if @store.verified? %>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                  <i class="fas fa-check-circle mr-1"></i>
+                  Verified Store
+                </span>
+              <% end %>
+            </div>
+            
+            <p class="text-gray-600 mb-4 max-w-2xl"><%= @store.description %></p>
+            
+            <!-- Store Stats -->
+            <div class="flex items-center space-x-6 text-sm text-gray-500">
+              <span>
+                <i class="fas fa-box mr-1"></i>
+                <%= pluralize(@store.total_products, 'product') %>
+              </span>
+              <span>
+                <i class="fas fa-star mr-1"></i>
+                <%= @store.average_rating || 'No ratings' %>
+              </span>
+              <span>
+                <i class="fas fa-map-marker-alt mr-1"></i>
+                <%= @store.address %>
+              </span>
+              <% if @store.website.present? %>
+                <span>
+                  <i class="fas fa-globe mr-1"></i>
+                  <%= link_to @store.website, @store.website, target: "_blank", class: "text-green-600 hover:text-green-700" %>
+                </span>
+              <% end %>
+            </div>
+          </div>
+
+          <!-- Contact Info -->
+          <div class="mt-4 lg:mt-0 lg:ml-8">
+            <div class="bg-gray-50 rounded-lg p-4">
+              <h3 class="text-sm font-medium text-gray-900 mb-2">Contact Information</h3>
+              <div class="space-y-1 text-sm text-gray-600">
+                <% if @store.phone.present? %>
+                  <div>
+                    <i class="fas fa-phone mr-2"></i>
+                    <%= @store.phone %>
+                  </div>
+                <% end %>
+                <% if @store.email.present? %>
+                  <div>
+                    <i class="fas fa-envelope mr-2"></i>
+                    <%= mail_to @store.email, @store.email, class: "text-green-600 hover:text-green-700" %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Store Products -->
+    <div class="mb-8">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">Products from <%= @store.name %></h2>
+        <div class="text-sm text-gray-600">
+          <%= pluralize(@products.total_count, 'product') %> available
+        </div>
+      </div>
+
+      <% if @products.any? %>
+        <!-- Products Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <% @products.each do |product| %>
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
+              <!-- Product Image -->
+              <div class="aspect-w-1 aspect-h-1 bg-gray-200">
+                <% if product.product_images.any? %>
+                  <%= image_tag product.product_images.first.image.url, 
+                      class: "w-full h-48 object-cover", 
+                      alt: product.name %>
+                <% else %>
+                  <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
+                    <i class="fas fa-image text-gray-400 text-3xl"></i>
+                  </div>
+                <% end %>
+              </div>
+
+              <!-- Product Info -->
+              <div class="p-4">
+                <!-- Category -->
+                <div class="text-xs text-green-600 font-medium mb-1">
+                  <%= product.category.name %>
+                </div>
+
+                <!-- Product Name -->
+                <h3 class="text-sm font-semibold text-gray-900 mb-2 line-clamp-2">
+                  <%= link_to product.name, product_path(product), class: "hover:text-green-600" %>
+                </h3>
+
+                <!-- Rating -->
+                <div class="flex items-center mb-2">
+                  <div class="flex items-center">
+                    <% 5.times do |i| %>
+                      <i class="fas fa-star text-xs <%= i < product.average_rating.to_i ? 'text-yellow-400' : 'text-gray-300' %>"></i>
+                    <% end %>
+                  </div>
+                  <span class="text-xs text-gray-600 ml-1">
+                    (<%= product.reviews_count %>)
+                  </span>
+                </div>
+
+                <!-- Price -->
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-lg font-bold text-gray-900">
+                    RM <%= number_with_precision(product.price, precision: 2) %>
+                  </span>
+                  <span class="text-xs text-gray-500">
+                    <%= product.stock_quantity %> in stock
+                  </span>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex space-x-2">
+                  <%= link_to "View Details", product_path(product), 
+                      class: "flex-1 bg-green-600 text-white text-sm font-medium py-2 px-3 rounded-lg hover:bg-green-700 text-center" %>
+                  
+                  <% if user_signed_in? %>
+                    <%= link_to add_to_cart_path(product), method: :post, 
+                        class: "bg-gray-100 text-gray-700 p-2 rounded-lg hover:bg-gray-200",
+                        title: "Add to Cart" do %>
+                      <i class="fas fa-shopping-cart text-sm"></i>
+                    <% end %>
+                    
+                    <%= link_to add_to_wishlist_path(product), method: :post,
+                        class: "bg-gray-100 text-gray-700 p-2 rounded-lg hover:bg-gray-200",
+                        title: "Add to Wishlist" do %>
+                      <i class="fas fa-heart text-sm"></i>
+                    <% end %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Pagination -->
+        <% if @products.total_pages > 1 %>
+          <div class="mt-8 flex justify-center">
+            <%= paginate @products, theme: 'tailwind' %>
+          </div>
+        <% end %>
+
+      <% else %>
+        <!-- No Products -->
+        <div class="text-center py-12">
+          <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-box text-gray-400 text-3xl"></i>
+          </div>
+          <h3 class="text-lg font-medium text-gray-900 mb-2">No products available</h3>
+          <p class="text-gray-600">
+            This store doesn't have any products listed yet.
+          </p>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Store Reviews -->
+    <% if @reviews.any? %>
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Store Reviews</h2>
+        
+        <div class="space-y-6">
+          <% @reviews.each do |review| %>
+            <div class="border-b border-gray-200 pb-6 last:border-b-0">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center">
+                  <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                    <span class="text-green-600 font-medium text-sm">
+                      <%= review.user.first_name.first.upcase %>
+                    </span>
+                  </div>
+                  <div>
+                    <div class="font-medium text-gray-900"><%= review.user.full_name %></div>
+                    <div class="text-sm text-gray-500"><%= review.created_at.strftime("%B %d, %Y") %></div>
+                  </div>
+                </div>
+                <div class="flex items-center">
+                  <% 5.times do |i| %>
+                    <i class="fas fa-star text-sm <%= i < review.rating ? 'text-yellow-400' : 'text-gray-300' %>"></i>
+                  <% end %>
+                </div>
+              </div>
+              <div class="text-gray-700">
+                <%= simple_format(review.comment) %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

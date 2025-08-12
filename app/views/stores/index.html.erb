@@ -1,0 +1,90 @@
+<div class="bg-gray-50 min-h-screen">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Page Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Stores</h1>
+      <p class="text-gray-600">Discover amazing stores and sellers</p>
+    </div>
+
+    <% if @stores.any? %>
+      <!-- Stores Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <% @stores.each do |store| %>
+          <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
+            <!-- Store Banner -->
+            <div class="h-32 bg-gradient-to-r from-green-400 to-green-600 relative">
+              <% if store.banner.attached? %>
+                <%= image_tag store.banner, class: "w-full h-full object-cover" %>
+              <% end %>
+              
+              <!-- Store Logo -->
+              <div class="absolute -bottom-8 left-4">
+                <div class="w-16 h-16 bg-white rounded-lg shadow-sm border-2 border-white overflow-hidden">
+                  <% if store.logo.attached? %>
+                    <%= image_tag store.logo, class: "w-full h-full object-cover" %>
+                  <% else %>
+                    <div class="w-full h-full bg-green-100 flex items-center justify-center">
+                      <i class="fas fa-store text-green-600 text-xl"></i>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+
+            <!-- Store Info -->
+            <div class="pt-10 pb-4 px-4">
+              <!-- Store Name -->
+              <h3 class="text-lg font-semibold text-gray-900 mb-1">
+                <%= link_to store.name, store_path(store), class: "hover:text-green-600" %>
+              </h3>
+
+              <!-- Store Description -->
+              <p class="text-sm text-gray-600 mb-3 line-clamp-2">
+                <%= store.description %>
+              </p>
+
+              <!-- Store Stats -->
+              <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                <span>
+                  <i class="fas fa-box mr-1"></i>
+                  <%= pluralize(store.total_products, 'product') %>
+                </span>
+                <span>
+                  <i class="fas fa-star mr-1"></i>
+                  <%= store.average_rating || 'No ratings' %>
+                </span>
+              </div>
+
+              <!-- Store Status -->
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <% if store.verified? %>
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      <i class="fas fa-check-circle mr-1"></i>
+                      Verified
+                    </span>
+                  <% end %>
+                </div>
+                
+                <%= link_to "Visit Store", store_path(store), 
+                    class: "bg-green-600 text-white text-sm font-medium py-2 px-4 rounded-lg hover:bg-green-700" %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+    <% else %>
+      <!-- No Stores Found -->
+      <div class="text-center py-12">
+        <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-store text-gray-400 text-3xl"></i>
+        </div>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">No stores found</h3>
+        <p class="text-gray-600 mb-6">
+          No stores are available at the moment
+        </p>
+      </div>
+    <% end %>
+  </div>
+</div>

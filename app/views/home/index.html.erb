@@ -1,0 +1,288 @@
+<!-- Hero Section -->
+<section class="bg-gradient-to-r from-green-600 to-green-700 text-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div>
+        <h1 class="text-4xl md:text-6xl font-bold mb-6">
+          Malaysia's Premier
+          <span class="text-yellow-300">E-Commerce</span>
+          Marketplace
+        </h1>
+        <p class="text-xl mb-8 text-green-100">
+          Shop halal products, support local businesses, and enjoy secure online shopping. 
+          Connect with trusted sellers and discover amazing deals.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <%= link_to products_path, class: "bg-white text-green-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors text-center" do %>
+            <i class="fas fa-shopping-bag mr-2"></i> Start Shopping
+          <% end %>
+          <%= link_to new_user_registration_path, class: "border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-green-600 transition-colors text-center" do %>
+            <i class="fas fa-store mr-2"></i> Become a Seller
+          <% end %>
+        </div>
+      </div>
+      <div class="hidden lg:block">
+        <div class="relative">
+          <div class="w-full h-96 bg-green-500 rounded-lg shadow-2xl"></div>
+          <div class="absolute -top-4 -right-4 w-32 h-32 bg-yellow-400 rounded-full opacity-20"></div>
+          <div class="absolute -bottom-4 -left-4 w-24 h-24 bg-white rounded-full opacity-20"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-16 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">Why Choose NEGO?</h2>
+      <p class="text-lg text-gray-600">Experience the best of Malaysian e-commerce</p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="text-center">
+        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-shield-alt text-2xl text-green-600"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-2">Halal & Secure</h3>
+        <p class="text-gray-600">All products are halal-certified and transactions are secure</p>
+      </div>
+      
+      <div class="text-center">
+        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-truck text-2xl text-green-600"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-2">Fast Delivery</h3>
+        <p class="text-gray-600">Quick and reliable delivery across Malaysia</p>
+      </div>
+      
+      <div class="text-center">
+        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-handshake text-2xl text-green-600"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-2">Support Local</h3>
+        <p class="text-gray-600">Help Malaysian businesses grow and thrive</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Categories Section -->
+<section class="py-16 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">Shop by Category</h2>
+      <p class="text-lg text-gray-600">Discover products in your favorite categories</p>
+    </div>
+    
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+      <% @categories.each do |category| %>
+        <%= link_to category_path(category), class: "group" do %>
+          <div class="bg-white rounded-lg p-6 text-center shadow-sm hover:shadow-md transition-shadow">
+            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-green-200 transition-colors">
+              <i class="fas fa-tag text-green-600"></i>
+            </div>
+            <h3 class="font-semibold text-gray-900 group-hover:text-green-600 transition-colors">
+              <%= category.name %>
+            </h3>
+            <p class="text-sm text-gray-500 mt-1">
+              <%= pluralize(category.products_count, 'product') %>
+            </p>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+    
+    <div class="text-center mt-8">
+      <%= link_to categories_path, class: "inline-flex items-center text-green-600 hover:text-green-700 font-semibold" do %>
+        View All Categories
+        <i class="fas fa-arrow-right ml-2"></i>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Products Section -->
+<section class="py-16 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">Featured Products</h2>
+      <p class="text-lg text-gray-600">Handpicked products from our top sellers</p>
+    </div>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <% @featured_products.each do |product| %>
+        <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
+          <div class="relative">
+            <% if product.main_image %>
+              <%= image_tag product.main_image.image, class: "w-full h-48 object-cover rounded-t-lg" %>
+            <% else %>
+              <div class="w-full h-48 bg-gray-200 rounded-t-lg flex items-center justify-center">
+                <i class="fas fa-image text-gray-400 text-3xl"></i>
+              </div>
+            <% end %>
+            <% if product.featured? %>
+              <div class="absolute top-2 left-2 bg-yellow-400 text-yellow-900 px-2 py-1 rounded text-xs font-semibold">
+                Featured
+              </div>
+            <% end %>
+          </div>
+          
+          <div class="p-4">
+            <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2">
+              <%= link_to product.name, product_path(product), class: "hover:text-green-600" %>
+            </h3>
+            
+            <div class="flex items-center mb-2">
+              <div class="flex text-yellow-400">
+                <% 5.times do |i| %>
+                  <i class="fas fa-star <%= i < product.average_rating ? 'text-yellow-400' : 'text-gray-300' %>"></i>
+                <% end %>
+              </div>
+              <span class="text-sm text-gray-500 ml-2">(<%= product.reviews_count %>)</span>
+            </div>
+            
+            <div class="flex items-center justify-between">
+              <span class="text-lg font-bold text-green-600">
+                RM <%= number_with_precision(product.price, precision: 2) %>
+              </span>
+              <span class="text-sm text-gray-500">
+                by <%= product.seller.full_name %>
+              </span>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    
+    <div class="text-center mt-8">
+      <%= link_to featured_products_path, class: "inline-flex items-center text-green-600 hover:text-green-700 font-semibold" do %>
+        View All Featured Products
+        <i class="fas fa-arrow-right ml-2"></i>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<!-- New Arrivals Section -->
+<section class="py-16 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">New Arrivals</h2>
+      <p class="text-lg text-gray-600">Fresh products added recently</p>
+    </div>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <% @recent_products.each do |product| %>
+        <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
+          <div class="relative">
+            <% if product.main_image %>
+              <%= image_tag product.main_image.image, class: "w-full h-48 object-cover rounded-t-lg" %>
+            <% else %>
+              <div class="w-full h-48 bg-gray-200 rounded-t-lg flex items-center justify-center">
+                <i class="fas fa-image text-gray-400 text-3xl"></i>
+              </div>
+            <% end %>
+            <div class="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-xs font-semibold">
+              New
+            </div>
+          </div>
+          
+          <div class="p-4">
+            <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2">
+              <%= link_to product.name, product_path(product), class: "hover:text-green-600" %>
+            </h3>
+            
+            <div class="flex items-center justify-between">
+              <span class="text-lg font-bold text-green-600">
+                RM <%= number_with_precision(product.price, precision: 2) %>
+              </span>
+              <span class="text-sm text-gray-500">
+                <%= time_ago_in_words(product.created_at) %> ago
+              </span>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    
+    <div class="text-center mt-8">
+      <%= link_to new_arrivals_products_path, class: "inline-flex items-center text-green-600 hover:text-green-700 font-semibold" do %>
+        View All New Arrivals
+        <i class="fas fa-arrow-right ml-2"></i>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<!-- Top Stores Section -->
+<section class="py-16 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">Top Stores</h2>
+      <p class="text-lg text-gray-600">Shop from our most trusted sellers</p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <% @stores.each do |store| %>
+        <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border">
+          <div class="p-6 text-center">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <% if store.logo.attached? %>
+                <%= image_tag store.logo, class: "w-12 h-12 rounded-full object-cover" %>
+              <% else %>
+                <i class="fas fa-store text-2xl text-green-600"></i>
+              <% end %>
+            </div>
+            
+            <h3 class="font-semibold text-gray-900 mb-2">
+              <%= link_to store.name, store_path(store), class: "hover:text-green-600" %>
+            </h3>
+            
+            <p class="text-sm text-gray-600 mb-3 line-clamp-2">
+              <%= store.description %>
+            </p>
+            
+            <div class="flex items-center justify-center space-x-4 text-sm text-gray-500">
+              <span>
+                <i class="fas fa-star text-yellow-400 mr-1"></i>
+                <%= store.average_rating %>
+              </span>
+              <span>
+                <i class="fas fa-box mr-1"></i>
+                <%= pluralize(store.total_products, 'product') %>
+              </span>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    
+    <div class="text-center mt-8">
+      <%= link_to stores_path, class: "inline-flex items-center text-green-600 hover:text-green-700 font-semibold" do %>
+        View All Stores
+        <i class="fas fa-arrow-right ml-2"></i>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-16 bg-green-600 text-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h2 class="text-3xl font-bold mb-4">Ready to Start Selling?</h2>
+    <p class="text-xl mb-8 text-green-100">
+      Join thousands of Malaysian businesses selling on NEGO. 
+      Start your online store today and reach more customers.
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <%= link_to new_user_registration_path, class: "bg-white text-green-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors" do %>
+        <i class="fas fa-store mr-2"></i> Become a Seller
+      <% end %>
+      <%= link_to contact_path, class: "border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-green-600 transition-colors" do %>
+        <i class="fas fa-phone mr-2"></i> Contact Us
+      <% end %>
+    </div>
+  </div>
+</section>

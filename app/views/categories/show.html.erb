@@ -1,0 +1,137 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Breadcrumb -->
+  <nav class="flex mb-8" aria-label="Breadcrumb">
+    <ol class="inline-flex items-center space-x-1 md:space-x-3">
+      <li class="inline-flex items-center">
+        <%= link_to root_path, class: "inline-flex items-center text-sm font-medium text-gray-700 hover:text-green-600" do %>
+          <i class="fas fa-home mr-2"></i>
+          Home
+        <% end %>
+      </li>
+      <li>
+        <div class="flex items-center">
+          <i class="fas fa-chevron-right text-gray-400 mx-2"></i>
+          <%= link_to "Categories", categories_path, class: "text-sm font-medium text-gray-700 hover:text-green-600" %>
+        </div>
+      </li>
+      <li aria-current="page">
+        <div class="flex items-center">
+          <i class="fas fa-chevron-right text-gray-400 mx-2"></i>
+          <span class="text-sm font-medium text-gray-500"><%= @category.name %></span>
+        </div>
+      </li>
+    </ol>
+  </nav>
+
+  <!-- Category Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2"><%= @category.name %></h1>
+    <p class="text-lg text-gray-600 mb-4"><%= @category.description %></p>
+    <p class="text-sm text-gray-500">
+      <%= pluralize(@products.total_count, 'product') %> found
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+    <!-- Sidebar Filters -->
+    <div class="lg:col-span-1">
+      <div class="bg-white rounded-lg shadow-sm border p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Filters</h3>
+        
+        <!-- Subcategories -->
+        <% if @subcategories.any? %>
+          <div class="mb-6">
+            <h4 class="text-sm font-medium text-gray-900 mb-3">Subcategories</h4>
+            <div class="space-y-2">
+              <% @subcategories.each do |subcategory| %>
+                <%= link_to category_path(subcategory), 
+                    class: "block text-sm text-gray-600 hover:text-green-600" do %>
+                  <%= subcategory.name %>
+                  <span class="text-gray-400">(<%= subcategory.products_count %>)</span>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Brands -->
+        <% if @brands.any? %>
+          <div class="mb-6">
+            <h4 class="text-sm font-medium text-gray-900 mb-3">Brands</h4>
+            <div class="space-y-2">
+              <% @brands.each do |brand| %>
+                <%= link_to brand_products_path(brand), 
+                    class: "block text-sm text-gray-600 hover:text-green-600" do %>
+                  <%= brand %>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="lg:col-span-3">
+      <% if @products.any? %>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% @products.each do |product| %>
+            <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
+              <div class="relative">
+                <% if product.main_image %>
+                  <%= image_tag product.main_image.image, class: "w-full h-48 object-cover rounded-t-lg" %>
+                <% else %>
+                  <div class="w-full h-48 bg-gray-200 rounded-t-lg flex items-center justify-center">
+                    <i class="fas fa-image text-gray-400 text-3xl"></i>
+                  </div>
+                <% end %>
+                <% if product.featured? %>
+                  <div class="absolute top-2 left-2 bg-yellow-400 text-yellow-900 px-2 py-1 rounded text-xs font-semibold">
+                    Featured
+                  </div>
+                <% end %>
+              </div>
+              
+              <div class="p-4">
+                <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2">
+                  <%= link_to product.name, product_path(product), class: "hover:text-green-600" %>
+                </h3>
+                
+                <div class="flex items-center mb-2">
+                  <div class="flex text-yellow-400">
+                    <% 5.times do |i| %>
+                      <i class="fas fa-star <%= i < product.average_rating ? 'text-yellow-400' : 'text-gray-300' %>"></i>
+                    <% end %>
+                  </div>
+                  <span class="text-sm text-gray-500 ml-2">(<%= product.reviews_count %>)</span>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                  <span class="text-lg font-bold text-green-600">
+                    RM <%= number_with_precision(product.price, precision: 2) %>
+                  </span>
+                  <span class="text-sm text-gray-500">
+                    by <%= product.seller.full_name %>
+                  </span>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Pagination -->
+        <% if @products.respond_to?(:current_page) %>
+          <div class="mt-8 flex justify-center">
+            <%= paginate @products %>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="text-center py-12">
+          <i class="fas fa-box-open text-gray-400 text-4xl mb-4"></i>
+          <h3 class="text-lg font-medium text-gray-900 mb-2">No products found</h3>
+          <p class="text-gray-600">There are no products in this category yet.</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

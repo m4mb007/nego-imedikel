@@ -1,0 +1,48 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="text-center mb-12">
+    <h1 class="text-4xl font-bold text-gray-900 mb-4">Shop by Category</h1>
+    <p class="text-lg text-gray-600">Discover products in your favorite categories</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <% @categories.each do |category| %>
+      <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border">
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-semibold text-gray-900">
+              <%= link_to category.name, category_path(category), class: "hover:text-green-600" %>
+            </h2>
+            <span class="text-sm text-gray-500">
+              <%= pluralize(category.products_count, 'product') %>
+            </span>
+          </div>
+          
+          <p class="text-gray-600 mb-4">
+            <%= category.description %>
+          </p>
+
+          <% if category.subcategories.any? %>
+            <div class="mb-4">
+              <h3 class="text-sm font-medium text-gray-900 mb-2">Subcategories:</h3>
+              <div class="flex flex-wrap gap-2">
+                <% category.subcategories.limit(4).each do |subcategory| %>
+                  <%= link_to subcategory.name, category_path(subcategory), 
+                      class: "text-xs bg-green-100 text-green-800 px-2 py-1 rounded hover:bg-green-200" %>
+                <% end %>
+                <% if category.subcategories.count > 4 %>
+                  <span class="text-xs text-gray-500">+<%= category.subcategories.count - 4 %> more</span>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+
+          <%= link_to category_path(category), 
+              class: "inline-flex items-center text-green-600 hover:text-green-700 font-semibold text-sm" do %>
+            Browse Category
+            <i class="fas fa-arrow-right ml-2"></i>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,110 @@
+<div class="bg-gray-50 min-h-screen">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Page Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">My Wishlist</h1>
+      <p class="text-gray-600">Save products you love for later</p>
+    </div>
+
+    <% if @wishlist_items.any? %>
+      <!-- Wishlist Items -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <% @wishlist_items.each do |wishlist_item| %>
+          <% product = wishlist_item.product %>
+          <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
+            <!-- Product Image -->
+            <div class="aspect-w-1 aspect-h-1 bg-gray-200">
+              <% if product.product_images.any? %>
+                <%= image_tag product.product_images.first.image.url, 
+                    class: "w-full h-48 object-cover", 
+                    alt: product.name %>
+              <% else %>
+                <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
+                  <i class="fas fa-image text-gray-400 text-3xl"></i>
+                </div>
+              <% end %>
+            </div>
+
+            <!-- Product Info -->
+            <div class="p-4">
+              <!-- Category -->
+              <div class="text-xs text-green-600 font-medium mb-1">
+                <%= product.category.name %>
+              </div>
+
+              <!-- Product Name -->
+              <h3 class="text-sm font-semibold text-gray-900 mb-2 line-clamp-2">
+                <%= link_to product.name, product_path(product), class: "hover:text-green-600" %>
+              </h3>
+
+              <!-- Rating -->
+              <div class="flex items-center mb-2">
+                <div class="flex items-center">
+                  <% 5.times do |i| %>
+                    <i class="fas fa-star text-xs <%= i < product.average_rating.to_i ? 'text-yellow-400' : 'text-gray-300' %>"></i>
+                  <% end %>
+                </div>
+                <span class="text-xs text-gray-600 ml-1">
+                  (<%= product.reviews_count %>)
+                </span>
+              </div>
+
+              <!-- Price -->
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-lg font-bold text-gray-900">
+                  RM <%= number_with_precision(product.price, precision: 2) %>
+                </span>
+                <span class="text-xs text-gray-500">
+                  by <%= product.user.store&.name || product.user.full_name %>
+                </span>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="flex space-x-2">
+                <%= link_to "View Details", product_path(product), 
+                    class: "flex-1 bg-green-600 text-white text-sm font-medium py-2 px-3 rounded-lg hover:bg-green-700 text-center" %>
+                
+                <%= link_to add_to_cart_path(product), method: :post, 
+                    class: "bg-gray-100 text-gray-700 p-2 rounded-lg hover:bg-gray-200",
+                    title: "Add to Cart" do %>
+                  <i class="fas fa-shopping-cart text-sm"></i>
+                <% end %>
+                
+                <%= link_to remove_from_wishlist_path(product), method: :delete,
+                    class: "bg-red-100 text-red-600 p-2 rounded-lg hover:bg-red-200",
+                    title: "Remove from Wishlist",
+                    data: { confirm: "Remove this item from your wishlist?" } do %>
+                  <i class="fas fa-trash text-sm"></i>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Clear Wishlist Button -->
+      <div class="mt-8 text-center">
+        <%= link_to clear_wishlist_path, method: :delete,
+            class: "bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700",
+            data: { confirm: "Are you sure you want to clear your entire wishlist?" } do %>
+          <i class="fas fa-trash mr-2"></i>
+          Clear Wishlist
+        <% end %>
+      </div>
+
+    <% else %>
+      <!-- Empty Wishlist -->
+      <div class="text-center py-12">
+        <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-heart text-gray-400 text-3xl"></i>
+        </div>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">Your wishlist is empty</h3>
+        <p class="text-gray-600 mb-6">
+          Start adding products you love to your wishlist!
+        </p>
+        <%= link_to "Browse Products", products_path, 
+            class: "bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700" %>
+      </div>
+    <% end %>
+  </div>
+</div>
