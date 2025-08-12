@@ -569,8 +569,8 @@ GEM
     unicode-emoji (4.0.4)
     uri (1.0.3)
     useragent (0.16.11)
-    validates_zipcode (0.0.20)
-      activemodel (>= 3.2.0)
+    validates_zipcode (0.5.4)
+      activemodel (>= 4.2.0)
     version_gem (1.1.8)
     warden (1.2.9)
       rack (>= 2.0.9)
@@ -650,7 +650,7 @@ DEPENDENCIES
   turbo-rails
   twilio-ruby (~> 6.0)
   tzinfo-data
-  validates_zipcode (~> 0.0.6)
+  validates_zipcode (~> 0.5.4)
   web-console
 
 BUNDLED WITH

@@ -55,7 +55,7 @@ gem "acts_as_list", "~> 1.1"
 gem "acts_as_paranoid", "~> 0.7"
 gem "money-rails", "~> 1.15"
 gem "geocoder", "~> 1.8"
-gem "validates_zipcode", "~> 0.0.6"
+gem "validates_zipcode", "~> 0.5.4"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
