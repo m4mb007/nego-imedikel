@@ -45,7 +45,7 @@ gem "elasticsearch-rails", "~> 7.0"
 # Notifications and Communication
 gem "twilio-ruby", "~> 6.0"
 gem "sendgrid-ruby", "~> 6.0"
-gem "fcm", "~> 1.0"
+gem "fcm", "~> 2.0"
 
 # Utilities
 gem "bcrypt", "~> 3.1.7"
