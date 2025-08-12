@@ -19,7 +19,7 @@ gem "tailwindcss-rails"
 # Authentication and Authorization
 gem "devise", "~> 4.9"
 gem "omniauth-google-oauth2", "~> 1.1"
-gem "omniauth-facebook", "~> 9.0"
+gem "omniauth-facebook", "~> 10.0"
 gem "omniauth-apple", "~> 1.0"
 gem "pundit", "~> 2.3"
 
