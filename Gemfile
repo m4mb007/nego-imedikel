@@ -36,7 +36,7 @@ gem "sidekiq", "~> 7.0"
 gem "redis", "~> 5.0"
 
 # API and JSON
-gem "rack-cors", "~> 2.0"
+gem "rack-cors", "~> 3.0"
 
 # Search and Filtering
 gem "ransack", "~> 4.1"
