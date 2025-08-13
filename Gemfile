@@ -25,7 +25,7 @@ gem "pundit", "~> 2.3"
 
 # Payment Processing
 gem "stripe", "~> 12.0"
-gem "pay", "~> 7.0"
+gem "pay", "~> 11.2"
 
 # File Upload and Image Processing
 gem "image_processing", "~> 1.2"
