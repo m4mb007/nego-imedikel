@@ -1,10 +1,10 @@
 FactoryBot.define do
   factory :category do
-    name { "MyString" }
-    description { "MyText" }
-    slug { "MyString" }
+    name { Faker::Commerce.department }
+    description { Faker::Lorem.paragraph }
+    slug { Faker::Internet.slug }
     parent { nil }
-    position { 1 }
+    position { Faker::Number.between(from: 1, to: 10) }
     status { 1 }
   end
 end

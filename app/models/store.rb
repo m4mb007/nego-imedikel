@@ -32,6 +32,10 @@ class Store < ApplicationRecord
   scope :verified, -> { where.not(verified_at: nil) }
   scope :featured, -> { where(featured: true) }
   scope :recent, -> { order(created_at: :desc) }
+  scope :search, ->(query) { 
+    where("name ILIKE ? OR description ILIKE ? OR email ILIKE ?", 
+          "%#{query}%", "%#{query}%", "%#{query}%") if query.present?
+  }
 
   # Methods
   def verified?

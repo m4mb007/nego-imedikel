@@ -107,6 +107,12 @@
                     <%= link_to admin_dashboard_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" do %>
                       <i class="fas fa-cog mr-2"></i> Admin Panel
                     <% end %>
+                    <%= link_to admin_mlm_index_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" do %>
+                      <i class="fas fa-users mr-2"></i> MLM System
+                    <% end %>
+                    <%= link_to admin_settings_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" do %>
+                      <i class="fas fa-sliders-h mr-2"></i> Settings
+                    <% end %>
                   <% end %>
                   <div class="border-t border-gray-200"></div>
                   <%= button_to destroy_user_session_path, method: :delete, class: "w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" do %>

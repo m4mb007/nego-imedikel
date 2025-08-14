@@ -1,0 +1,530 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Application Settings</h1>
+    <p class="mt-2 text-gray-600">Configure your application settings across different categories</p>
+  </div>
+
+  <div class="max-w-5xl mx-auto">
+    <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+      <!-- Enhanced Tab Navigation -->
+      <div class="bg-gray-50 border-b border-gray-200">
+        <nav class="flex px-6" aria-label="Tabs">
+          <button onclick="showTab('general')" id="tab-general" class="tab-button active group relative py-4 px-6 flex items-center space-x-2 border-b-2 border-transparent font-medium text-sm transition-all duration-200 ease-in-out">
+            <i class="fas fa-cog text-lg transition-colors duration-200"></i>
+            <span>General</span>
+            <div class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500 transform scale-x-0 transition-transform duration-200 ease-in-out"></div>
+          </button>
+          <button onclick="showTab('business')" id="tab-business" class="tab-button group relative py-4 px-6 flex items-center space-x-2 border-b-2 border-transparent font-medium text-sm transition-all duration-200 ease-in-out">
+            <i class="fas fa-briefcase text-lg transition-colors duration-200"></i>
+            <span>Business</span>
+            <div class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500 transform scale-x-0 transition-transform duration-200 ease-in-out"></div>
+          </button>
+          <button onclick="showTab('email')" id="tab-email" class="tab-button group relative py-4 px-6 flex items-center space-x-2 border-b-2 border-transparent font-medium text-sm transition-all duration-200 ease-in-out">
+            <i class="fas fa-envelope text-lg transition-colors duration-200"></i>
+            <span>Email</span>
+            <div class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500 transform scale-x-0 transition-transform duration-200 ease-in-out"></div>
+          </button>
+          <button onclick="showTab('rewards')" id="tab-rewards" class="tab-button group relative py-4 px-6 flex items-center space-x-2 border-b-2 border-transparent font-medium text-sm transition-all duration-200 ease-in-out">
+            <i class="fas fa-gift text-lg transition-colors duration-200"></i>
+            <span>Rewards</span>
+            <div class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500 transform scale-x-0 transition-transform duration-200 ease-in-out"></div>
+          </button>
+          <button onclick="showTab('mlm')" id="tab-mlm" class="tab-button group relative py-4 px-6 flex items-center space-x-2 border-b-2 border-transparent font-medium text-sm transition-all duration-200 ease-in-out">
+            <i class="fas fa-users text-lg transition-colors duration-200"></i>
+            <span>MLM System</span>
+            <div class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500 transform scale-x-0 transition-transform duration-200 ease-in-out"></div>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Tab Content -->
+      <div class="p-8">
+        <%= form_with url: admin_settings_path, method: :patch, local: true do |form| %>
+          
+          <!-- General Settings Tab -->
+          <div id="tab-content-general" class="tab-content active">
+            <div class="mb-6">
+              <h2 class="text-2xl font-bold text-gray-900 mb-2">General Settings</h2>
+              <p class="text-gray-600">Configure basic application information and contact details</p>
+            </div>
+            <div class="space-y-6">
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="form-group">
+                  <%= form.label "settings[site_name]", "Site Name", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+                  <%= form.text_field "settings[site_name]", 
+                      value: @settings["site_name"]&.value || "NEGO", 
+                      class: "form-input w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" %>
+                </div>
+
+                <div class="form-group">
+                  <%= form.label "settings[contact_email]", "Contact Email", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+                  <%= form.email_field "settings[contact_email]", 
+                      value: @settings["contact_email"]&.value || "contact@nego.com", 
+                      class: "form-input w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" %>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <%= form.label "settings[site_description]", "Site Description", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+                <%= form.text_area "settings[site_description]", 
+                    value: @settings["site_description"]&.value || "Your trusted marketplace", 
+                    rows: 3, 
+                    class: "form-input w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" %>
+              </div>
+
+              <div class="form-group">
+                <%= form.label "settings[support_phone]", "Support Phone", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+                <%= form.telephone_field "settings[support_phone]", 
+                    value: @settings["support_phone"]&.value || "+1234567890", 
+                    class: "form-input w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Business Settings Tab -->
+          <div id="tab-content-business" class="tab-content hidden">
+            <div class="mb-6">
+              <h2 class="text-2xl font-bold text-gray-900 mb-2">Business Settings</h2>
+              <p class="text-gray-600">Configure business rules and platform settings</p>
+            </div>
+            <div class="space-y-6">
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="form-group">
+                  <%= form.label "settings[commission_rate]", "Commission Rate", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+                  <div class="relative">
+                    <%= form.number_field "settings[commission_rate]", 
+                        value: @settings["commission_rate"]&.value || "5", 
+                        step: "0.1", 
+                        min: "0", 
+                        max: "100", 
+                        class: "form-input w-full border border-gray-300 rounded-lg px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" %>
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                      <span class="text-gray-500 text-sm font-medium">%</span>
+                    </div>
+                  </div>
+                  <p class="mt-2 text-sm text-gray-500">Platform commission rate for all transactions</p>
+                </div>
+
+                <div class="form-group">
+                  <%= form.label "settings[minimum_withdrawal]", "Minimum Withdrawal", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+                  <div class="relative">
+                    <%= form.number_field "settings[minimum_withdrawal]", 
+                        value: @settings["minimum_withdrawal"]&.value || "50", 
+                        step: "0.01", 
+                        min: "0", 
+                        class: "form-input w-full border border-gray-300 rounded-lg px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" %>
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                      <span class="text-gray-500 text-sm font-medium">RM</span>
+                    </div>
+                  </div>
+                  <p class="mt-2 text-sm text-gray-500">Minimum amount required for seller withdrawals</p>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <%= form.label "settings[auto_approve_stores]", "Auto-approve Stores", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+                <%= form.select "settings[auto_approve_stores]", 
+                    [["Yes", "true"], ["No", "false"]], 
+                    { selected: @settings["auto_approve_stores"]&.value || "false" }, 
+                    class: "form-select w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" %>
+                <p class="mt-2 text-sm text-gray-500">Automatically approve new store registrations without manual review</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Email Settings Tab -->
+          <div id="tab-content-email" class="tab-content hidden">
+            <div class="mb-6">
+              <h2 class="text-2xl font-bold text-gray-900 mb-2">Email Settings</h2>
+              <p class="text-gray-600">Configure SMTP settings for email notifications</p>
+            </div>
+            <div class="space-y-6">
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="form-group">
+                  <%= form.label "settings[smtp_host]", "SMTP Host", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+                  <%= form.text_field "settings[smtp_host]", 
+                      value: @settings["smtp_host"]&.value || "smtp.gmail.com", 
+                      class: "form-input w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" %>
+                </div>
+
+                <div class="form-group">
+                  <%= form.label "settings[smtp_port]", "SMTP Port", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+                  <%= form.number_field "settings[smtp_port]", 
+                      value: @settings["smtp_port"]&.value || "587", 
+                      class: "form-input w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" %>
+                </div>
+              </div>
+
+              <div class="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl p-6">
+                <div class="flex items-start">
+                  <div class="flex-shrink-0">
+                    <i class="fas fa-info-circle text-yellow-500 text-xl"></i>
+                  </div>
+                  <div class="ml-4">
+                    <h3 class="text-lg font-semibold text-yellow-800 mb-2">Email Configuration</h3>
+                    <div class="text-sm text-yellow-700 space-y-2">
+                      <p>Configure your SMTP settings to enable email notifications for users and administrators.</p>
+                      <p class="font-medium">Common SMTP settings:</p>
+                      <ul class="list-disc list-inside space-y-1 ml-4">
+                        <li>Gmail: smtp.gmail.com, Port 587</li>
+                        <li>Outlook: smtp-mail.outlook.com, Port 587</li>
+                        <li>Yahoo: smtp.mail.yahoo.com, Port 587</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rewards Settings Tab -->
+          <div id="tab-content-rewards" class="tab-content hidden">
+            <div class="mb-6">
+              <h2 class="text-2xl font-bold text-gray-900 mb-2">Rewards System Settings</h2>
+              <p class="text-gray-600">Configure customer loyalty and rewards program</p>
+            </div>
+            <div class="space-y-6">
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="form-group">
+                  <%= form.label "settings[points_per_ringgit]", "Points per RM1 Spent", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+                  <div class="relative">
+                    <%= form.number_field "settings[points_per_ringgit]", 
+                        value: @settings["points_per_ringgit"]&.value || "1", 
+                        step: "0.1", 
+                        min: "0", 
+                        max: "10", 
+                        class: "form-input w-full border border-gray-300 rounded-lg px-4 py-3 pr-24 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200" %>
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                      <span class="text-gray-500 text-sm font-medium">points/RM1</span>
+                    </div>
+                  </div>
+                  <p class="mt-2 text-sm text-gray-500">How many points a customer earns for every RM1 spent</p>
+                </div>
+
+                <div class="form-group">
+                  <%= form.label "settings[redemption_percentage]", "Maximum Redemption", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+                  <div class="relative">
+                    <%= form.number_field "settings[redemption_percentage]", 
+                        value: @settings["redemption_percentage"]&.value || "20", 
+                        step: "1", 
+                        min: "0", 
+                        max: "100", 
+                        class: "form-input w-full border border-gray-300 rounded-lg px-4 py-3 pr-20 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200" %>
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                      <span class="text-gray-500 text-sm font-medium">% of order</span>
+                    </div>
+                  </div>
+                  <p class="mt-2 text-sm text-gray-500">Maximum percentage of an order's value that can be paid using points</p>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="form-group">
+                  <%= form.label "settings[points_to_ringgit_ratio]", "Points to RM Ratio", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+                  <div class="relative">
+                    <%= form.number_field "settings[points_to_ringgit_ratio]", 
+                        value: @settings["points_to_ringgit_ratio"]&.value || "100", 
+                        step: "1", 
+                        min: "1", 
+                        max: "1000", 
+                        class: "form-input w-full border border-gray-300 rounded-lg px-4 py-3 pr-16 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200" %>
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                      <span class="text-gray-500 text-sm font-medium">pts = RM1</span>
+                    </div>
+                  </div>
+                  <p class="mt-2 text-sm text-gray-500">How many points are equivalent to RM1 when redeeming</p>
+                </div>
+
+                <div class="form-group">
+                  <%= form.label "settings[min_redemption_amount]", "Minimum Points for Redemption", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+                  <div class="relative">
+                    <%= form.number_field "settings[min_redemption_amount]", 
+                        value: @settings["min_redemption_amount"]&.value || "100", 
+                        step: "1", 
+                        min: "0", 
+                        class: "form-input w-full border border-gray-300 rounded-lg px-4 py-3 pr-16 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200" %>
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                      <span class="text-gray-500 text-sm font-medium">points</span>
+                    </div>
+                  </div>
+                  <p class="mt-2 text-sm text-gray-500">Minimum number of points required before redemption</p>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <%= form.label "settings[rewards_enabled]", "Enable Rewards System", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+                <%= form.select "settings[rewards_enabled]", 
+                    [["Enabled", "true"], ["Disabled", "false"]], 
+                    { selected: @settings["rewards_enabled"]&.value || "true" }, 
+                    class: "form-select w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200" %>
+                <p class="mt-2 text-sm text-gray-500">Enable or disable the entire rewards system for customers</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- MLM Settings Tab -->
+          <div id="tab-content-mlm" class="tab-content hidden">
+            <div class="mb-6">
+              <h2 class="text-2xl font-bold text-gray-900 mb-2">MLM Referral System Settings</h2>
+              <p class="text-gray-600">Configure multi-level marketing referral system</p>
+            </div>
+            <div class="space-y-6">
+              <div class="form-group">
+                <%= form.label "settings[mlm_enabled]", "Enable MLM System", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+                <%= form.select "settings[mlm_enabled]", 
+                    [["Enabled", "true"], ["Disabled", "false"]], 
+                    { selected: @settings["mlm_enabled"]&.value || "true" }, 
+                    class: "form-select w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" %>
+                <p class="mt-2 text-sm text-gray-500">Enable or disable the MLM referral system</p>
+              </div>
+
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="form-group">
+                  <%= form.label "settings[mlm_level1_rate]", "Level 1 Commission", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+                  <div class="relative">
+                    <%= form.number_field "settings[mlm_level1_rate]", 
+                        value: @settings["mlm_level1_rate"]&.value || "5", 
+                        step: "0.1", 
+                        min: "0", 
+                        max: "50", 
+                        class: "form-input w-full border border-gray-300 rounded-lg px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" %>
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                      <span class="text-gray-500 text-sm font-medium">%</span>
+                    </div>
+                  </div>
+                  <p class="mt-2 text-sm text-gray-500">Direct referrals (Level 1)</p>
+                </div>
+
+                <div class="form-group">
+                  <%= form.label "settings[mlm_level2_rate]", "Level 2 Commission", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+                  <div class="relative">
+                    <%= form.number_field "settings[mlm_level2_rate]", 
+                        value: @settings["mlm_level2_rate"]&.value || "2", 
+                        step: "0.1", 
+                        min: "0", 
+                        max: "25", 
+                        class: "form-input w-full border border-gray-300 rounded-lg px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" %>
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                      <span class="text-gray-500 text-sm font-medium">%</span>
+                    </div>
+                  </div>
+                  <p class="mt-2 text-sm text-gray-500">Indirect referrals (Level 2)</p>
+                </div>
+
+                <div class="form-group">
+                  <%= form.label "settings[mlm_level3_rate]", "Level 3 Commission", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+                  <div class="relative">
+                    <%= form.number_field "settings[mlm_level3_rate]", 
+                        value: @settings["mlm_level3_rate"]&.value || "1", 
+                        step: "0.1", 
+                        min: "0", 
+                        max: "10", 
+                        class: "form-input w-full border border-gray-300 rounded-lg px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" %>
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                      <span class="text-gray-500 text-sm font-medium">%</span>
+                    </div>
+                  </div>
+                  <p class="mt-2 text-sm text-gray-500">Third-level referrals (Level 3)</p>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <%= form.label "settings[mlm_minimum_payout]", "Minimum Payout Amount", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+                <div class="relative">
+                  <%= form.number_field "settings[mlm_minimum_payout]", 
+                      value: @settings["mlm_minimum_payout"]&.value || "50", 
+                      step: "0.01", 
+                      min: "0", 
+                      class: "form-input w-full border border-gray-300 rounded-lg px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" %>
+                  <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                    <span class="text-gray-500 text-sm font-medium">RM</span>
+                  </div>
+                </div>
+                <p class="mt-2 text-sm text-gray-500">Minimum commission amount required for payout</p>
+              </div>
+
+              <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6">
+                <div class="flex items-start">
+                  <div class="flex-shrink-0">
+                    <i class="fas fa-info-circle text-blue-500 text-xl"></i>
+                  </div>
+                  <div class="ml-4">
+                    <h3 class="text-lg font-semibold text-blue-800 mb-2">MLM Commission Structure</h3>
+                    <div class="text-sm text-blue-700 space-y-2">
+                      <p>Commissions are calculated based on the seller's net earnings (after platform commission).</p>
+                      <div class="bg-white rounded-lg p-4 border border-blue-100">
+                        <h4 class="font-semibold text-blue-800 mb-2">Commission Levels:</h4>
+                        <ul class="space-y-1">
+                          <li><span class="font-medium">Level 1:</span> Direct referrals (5% default)</li>
+                          <li><span class="font-medium">Level 2:</span> Indirect referrals (2% default)</li>
+                          <li><span class="font-medium">Level 3:</span> Third-level referrals (1% default)</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="mt-8 flex items-center justify-between border-t border-gray-200 pt-6">
+            <div class="text-sm text-gray-500">
+              <i class="fas fa-save mr-1"></i>
+              All settings will be saved together
+            </div>
+            <div class="flex space-x-3">
+              <%= link_to "Cancel", admin_dashboard_path, 
+                  class: "px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-200 font-medium" %>
+              <%= form.submit "Save All Settings", 
+                  class: "px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Enhanced Tab Styling */
+.tab-button {
+  @apply text-gray-500 hover:text-gray-700 hover:bg-gray-100;
+}
+
+.tab-button.active {
+  @apply text-blue-600 bg-white;
+}
+
+.tab-button.active .absolute {
+  @apply scale-x-100;
+}
+
+.tab-button:hover .absolute {
+  @apply scale-x-100;
+}
+
+.tab-button.active i {
+  @apply text-blue-500;
+}
+
+.tab-button:hover i {
+  @apply text-gray-600;
+}
+
+/* Form Input Styling */
+.form-input, .form-select {
+  @apply bg-white;
+}
+
+.form-input:focus, .form-select:focus {
+  @apply shadow-lg;
+}
+
+/* Tab Content Animation */
+.tab-content {
+  display: none;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease-in-out;
+}
+
+.tab-content.active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Form Group Spacing */
+.form-group {
+  @apply relative;
+}
+
+/* Enhanced Button Hover Effects */
+.btn-primary {
+  @apply relative overflow-hidden;
+}
+
+.btn-primary::before {
+  content: '';
+  @apply absolute inset-0 bg-white opacity-0 transition-opacity duration-200;
+}
+
+.btn-primary:hover::before {
+  @apply opacity-10;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .tab-button {
+    @apply px-3 py-3 text-xs;
+  }
+  
+  .tab-button span {
+    @apply hidden;
+  }
+  
+  .tab-button i {
+    @apply text-lg;
+  }
+}
+</style>
+
+<script>
+function showTab(tabName) {
+  // Hide all tab contents with animation
+  const tabContents = document.querySelectorAll('.tab-content');
+  tabContents.forEach(content => {
+    if (content.classList.contains('active')) {
+      content.style.opacity = '0';
+      content.style.transform = 'translateY(10px)';
+      setTimeout(() => {
+        content.classList.remove('active');
+        content.classList.add('hidden');
+      }, 150);
+    }
+  });
+
+  // Remove active class from all tab buttons
+  const tabButtons = document.querySelectorAll('.tab-button');
+  tabButtons.forEach(button => {
+    button.classList.remove('active');
+    button.classList.add('text-gray-500');
+  });
+
+  // Show selected tab content with animation
+  const selectedContent = document.getElementById(`tab-content-${tabName}`);
+  if (selectedContent) {
+    setTimeout(() => {
+      selectedContent.classList.remove('hidden');
+      selectedContent.classList.add('active');
+      setTimeout(() => {
+        selectedContent.style.opacity = '1';
+        selectedContent.style.transform = 'translateY(0)';
+      }, 50);
+    }, 200);
+  }
+
+  // Add active class to selected tab button
+  const selectedButton = document.getElementById(`tab-${tabName}`);
+  if (selectedButton) {
+    selectedButton.classList.add('active');
+    selectedButton.classList.remove('text-gray-500');
+  }
+}
+
+// Initialize with first tab active
+document.addEventListener('DOMContentLoaded', function() {
+  showTab('general');
+  
+  // Add smooth scrolling for better UX
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      document.querySelector(this.getAttribute('href')).scrollIntoView({
+        behavior: 'smooth'
+      });
+    });
+  });
+});
+</script>

@@ -20,6 +20,10 @@ class Coupon < ApplicationRecord
   scope :active, -> { where(status: :active) }
   scope :valid, -> { where('valid_from <= ? AND valid_until >= ?', Time.current, Time.current) }
   scope :available, -> { active.valid }
+  scope :search, ->(query) { 
+    where("code ILIKE ? OR description ILIKE ?", 
+          "%#{query}%", "%#{query}%") if query.present?
+  }
 
   # Methods
   def valid_for_amount?(amount)

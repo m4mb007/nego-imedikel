@@ -1,0 +1,156 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-6">
+    <%= link_to "← Back to Stores", admin_stores_path, 
+        class: "text-blue-600 hover:text-blue-800 mb-4 inline-block" %>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+    <!-- Store Header -->
+    <div class="bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-8 text-white">
+      <div class="flex items-center">
+        <div class="flex-shrink-0 h-20 w-20">
+          <% if @store.logo.attached? %>
+            <%= image_tag @store.logo, class: "h-20 w-20 rounded-full" %>
+          <% else %>
+            <div class="h-20 w-20 rounded-full bg-white bg-opacity-20 flex items-center justify-center">
+              <span class="text-white text-2xl font-bold"><%= @store.name.first.upcase %></span>
+            </div>
+          <% end %>
+        </div>
+        <div class="ml-6">
+          <h1 class="text-3xl font-bold"><%= @store.name %></h1>
+          <p class="text-blue-100 mt-1"><%= @store.description %></p>
+          <div class="flex items-center mt-4 space-x-4">
+            <span class="px-3 py-1 bg-white bg-opacity-20 rounded-full text-sm">
+              <%= @store.status.titleize %>
+            </span>
+            <% if @store.verified? %>
+              <span class="px-3 py-1 bg-green-500 bg-opacity-20 rounded-full text-sm">
+                Verified
+              </span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Store Details -->
+    <div class="p-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Basic Information -->
+        <div>
+          <h2 class="text-xl font-semibold mb-4">Store Information</h2>
+          <dl class="space-y-3">
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Store Name</dt>
+              <dd class="text-sm text-gray-900"><%= @store.name %></dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Description</dt>
+              <dd class="text-sm text-gray-900"><%= @store.description %></dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Email</dt>
+              <dd class="text-sm text-gray-900"><%= @store.email %></dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Phone</dt>
+              <dd class="text-sm text-gray-900"><%= @store.phone %></dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Address</dt>
+              <dd class="text-sm text-gray-900"><%= @store.address %></dd>
+            </div>
+            <% if @store.website.present? %>
+              <div>
+                <dt class="text-sm font-medium text-gray-500">Website</dt>
+                <dd class="text-sm text-gray-900">
+                  <%= link_to @store.website, @store.website, target: "_blank", 
+                      class: "text-blue-600 hover:text-blue-800" %>
+                </dd>
+              </div>
+            <% end %>
+          </dl>
+        </div>
+
+        <!-- Owner Information -->
+        <div>
+          <h2 class="text-xl font-semibold mb-4">Owner Information</h2>
+          <dl class="space-y-3">
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Owner Name</dt>
+              <dd class="text-sm text-gray-900"><%= @store.user.full_name %></dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Owner Email</dt>
+              <dd class="text-sm text-gray-900"><%= @store.user.email %></dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Owner Phone</dt>
+              <dd class="text-sm text-gray-900"><%= @store.user.phone %></dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Owner Role</dt>
+              <dd class="text-sm text-gray-900"><%= @store.user.role.titleize %></dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Member Since</dt>
+              <dd class="text-sm text-gray-900"><%= @store.user.created_at.strftime("%B %d, %Y") %></dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+
+      <!-- Statistics -->
+      <div class="mt-8">
+        <h2 class="text-xl font-semibold mb-4">Store Statistics</h2>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="bg-gray-50 rounded-lg p-4">
+            <div class="text-2xl font-bold text-blue-600"><%= @store.total_products %></div>
+            <div class="text-sm text-gray-500">Total Products</div>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-4">
+            <div class="text-2xl font-bold text-green-600"><%= @store.active_products %></div>
+            <div class="text-sm text-gray-500">Active Products</div>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-4">
+            <div class="text-2xl font-bold text-purple-600"><%= @store.total_orders %></div>
+            <div class="text-sm text-gray-500">Total Orders</div>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-4">
+            <div class="text-2xl font-bold text-orange-600">$<%= number_with_precision(@store.total_sales, precision: 2) %></div>
+            <div class="text-sm text-gray-500">Total Sales</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="mt-8 pt-6 border-t border-gray-200">
+        <h2 class="text-xl font-semibold mb-4">Actions</h2>
+        <div class="flex space-x-4">
+          <%= link_to "Edit Store", edit_admin_store_path(@store), 
+              class: "bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" %>
+          
+          <% if @store.pending? %>
+            <%= button_to "Verify Store", verify_admin_store_path(@store), 
+                method: :patch, 
+                class: "bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600" %>
+          <% end %>
+          
+          <% if @store.active? %>
+            <%= button_to "Suspend Store", suspend_admin_store_path(@store), 
+                method: :patch, 
+                class: "bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600" %>
+          <% elsif @store.suspended? %>
+            <%= button_to "Activate Store", activate_admin_store_path(@store), 
+                method: :patch, 
+                class: "bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600" %>
+          <% end %>
+          
+          <%= link_to "View Products", admin_products_path(store_id: @store.id), 
+              class: "bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

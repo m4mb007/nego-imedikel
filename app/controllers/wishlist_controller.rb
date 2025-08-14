@@ -1,4 +1,4 @@
-class WishlistsController < ApplicationController
+class WishlistController < ApplicationController
   before_action :authenticate_user!
   before_action :set_wishlist_items
 

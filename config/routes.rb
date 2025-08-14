@@ -1,12 +1,10 @@
 Rails.application.routes.draw do
-  get "stores/index"
-  get "stores/show"
-  get "wishlist/show"
-  get "cart/show"
-  get "cart/update"
-  get "cart/destroy"
-  get "categories/index"
-  get "categories/show"
+  resource :referral, only: [:show] do
+    collection do
+      post :apply
+    end
+  end
+
   # Devise routes
   devise_for :users
 
@@ -43,7 +41,7 @@ Rails.application.routes.draw do
   resources :categories, only: [:index, :show]
 
   # Cart
-  resource :cart, only: [:show, :update, :destroy] do
+  resource :cart, only: [:show, :update, :destroy], controller: 'cart' do
     member do
       post 'add_item'
       patch 'update_item'
@@ -54,7 +52,7 @@ Rails.application.routes.draw do
   end
 
   # Wishlist
-  resource :wishlist, only: [:show]
+  resource :wishlist, only: [:show], controller: 'wishlist'
 
   # Orders
   resources :orders, only: [:index, :show, :create] do
@@ -65,7 +63,7 @@ Rails.application.routes.draw do
   end
 
   # Checkout
-  resource :checkout, only: [:show, :update] do
+  resource :checkout, only: [:show, :update], controller: 'checkout' do
     member do
       get 'shipping'
       get 'payment'
@@ -74,7 +72,7 @@ Rails.application.routes.draw do
   end
 
   # User profile
-  resource :profile, only: [:show, :edit, :update] do
+  resource :profile, only: [:show, :edit, :update], controller: 'profile' do
     member do
       get 'orders'
       get 'wishlist'
@@ -82,6 +80,9 @@ Rails.application.routes.draw do
       get 'addresses'
     end
   end
+
+  # Reward wallet
+  resource :reward_wallet, only: [:show], controller: 'reward_wallet'
 
   # Addresses
   resources :addresses, except: [:show]
@@ -152,6 +153,10 @@ Rails.application.routes.draw do
 
   # Admin namespace
   namespace :admin do
+    get "mlm/index"
+    get "mlm/show"
+    get "mlm/payout"
+    get "rewards/index"
     get 'dashboard', to: 'dashboard#index'
     
     resources :users do
@@ -194,6 +199,19 @@ Rails.application.routes.draw do
     resources :coupons
     resources :reports, only: [:index]
     resources :settings, only: [:index, :update]
+    resources :rewards, only: [:index] do
+      collection do
+        get :edit
+        patch :update
+        post :award_points
+      end
+    end
+    resources :mlm, only: [:index, :show] do
+      collection do
+        post :payout
+        patch :process_payout
+      end
+    end
   end
 
   # API namespace

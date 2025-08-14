@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_12_055635) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_13_055543) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -62,7 +62,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_12_055635) do
   create_table "carts", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "product_id", null: false
-    t.bigint "product_variant_id", null: false
+    t.bigint "product_variant_id"
     t.integer "quantity"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -96,6 +96,24 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_12_055635) do
     t.integer "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "mlm_commissions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "referrer_id", null: false
+    t.bigint "order_id", null: false
+    t.integer "level", null: false
+    t.decimal "commission_amount", precision: 10, scale: 2, null: false
+    t.string "status", default: "pending", null: false
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_mlm_commissions_on_created_at"
+    t.index ["level"], name: "index_mlm_commissions_on_level"
+    t.index ["order_id"], name: "index_mlm_commissions_on_order_id"
+    t.index ["referrer_id"], name: "index_mlm_commissions_on_referrer_id"
+    t.index ["status"], name: "index_mlm_commissions_on_status"
+    t.index ["user_id"], name: "index_mlm_commissions_on_user_id"
   end
 
   create_table "notifications", force: :cascade do |t|
@@ -180,6 +198,32 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_12_055635) do
     t.index ["user_id"], name: "index_products_on_user_id"
   end
 
+  create_table "referral_codes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "code", null: false
+    t.boolean "is_active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_referral_codes_on_code", unique: true
+    t.index ["user_id"], name: "index_referral_codes_on_user_id"
+  end
+
+  create_table "referrals", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "referrer_id", null: false
+    t.bigint "referral_code_id", null: false
+    t.integer "level", default: 1, null: false
+    t.string "status", default: "active", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["level"], name: "index_referrals_on_level"
+    t.index ["referral_code_id"], name: "index_referrals_on_referral_code_id"
+    t.index ["referrer_id"], name: "index_referrals_on_referrer_id"
+    t.index ["status"], name: "index_referrals_on_status"
+    t.index ["user_id", "referrer_id"], name: "index_referrals_on_user_id_and_referrer_id", unique: true
+    t.index ["user_id"], name: "index_referrals_on_user_id"
+  end
+
   create_table "reviews", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "product_id", null: false
@@ -190,6 +234,35 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_12_055635) do
     t.datetime "updated_at", null: false
     t.index ["product_id"], name: "index_reviews_on_product_id"
     t.index ["user_id"], name: "index_reviews_on_user_id"
+  end
+
+  create_table "reward_transactions", force: :cascade do |t|
+    t.bigint "reward_wallet_id", null: false
+    t.string "transaction_type", null: false
+    t.integer "amount", null: false
+    t.text "description"
+    t.bigint "order_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_reward_transactions_on_created_at"
+    t.index ["order_id"], name: "index_reward_transactions_on_order_id"
+    t.index ["reward_wallet_id"], name: "index_reward_transactions_on_reward_wallet_id"
+    t.index ["transaction_type"], name: "index_reward_transactions_on_transaction_type"
+  end
+
+  create_table "reward_wallets", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "points", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_reward_wallets_on_user_id", unique: true
+  end
+
+  create_table "settings", force: :cascade do |t|
+    t.string "key"
+    t.text "value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "stores", force: :cascade do |t|
@@ -242,6 +315,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_12_055635) do
   add_foreign_key "carts", "products"
   add_foreign_key "carts", "users"
   add_foreign_key "categories", "categories", column: "parent_id"
+  add_foreign_key "mlm_commissions", "orders"
+  add_foreign_key "mlm_commissions", "users"
+  add_foreign_key "mlm_commissions", "users", column: "referrer_id"
   add_foreign_key "notifications", "users"
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "product_variants"
@@ -252,8 +328,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_12_055635) do
   add_foreign_key "product_variants", "products"
   add_foreign_key "products", "categories"
   add_foreign_key "products", "users"
+  add_foreign_key "referral_codes", "users"
+  add_foreign_key "referrals", "referral_codes"
+  add_foreign_key "referrals", "users"
+  add_foreign_key "referrals", "users", column: "referrer_id"
   add_foreign_key "reviews", "products"
   add_foreign_key "reviews", "users"
+  add_foreign_key "reward_transactions", "orders"
+  add_foreign_key "reward_transactions", "reward_wallets"
+  add_foreign_key "reward_wallets", "users"
   add_foreign_key "stores", "users"
   add_foreign_key "wishlists", "products"
   add_foreign_key "wishlists", "users"

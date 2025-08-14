@@ -1,0 +1,106 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <div class="bg-white shadow">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-6">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Edit Profile</h1>
+          <p class="mt-1 text-sm text-gray-500">Update your account information</p>
+        </div>
+        <div class="flex items-center space-x-4">
+          <%= link_to profile_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" do %>
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Profile
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="bg-white shadow rounded-lg">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h2 class="text-lg font-medium text-gray-900">Profile Information</h2>
+      </div>
+      
+      <div class="p-6">
+        <%= form_with model: @user, url: profile_path, method: :patch, local: true do |form| %>
+          <%= render 'shared/error_messages', resource: @user %>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- First Name -->
+            <div>
+              <%= form.label :first_name, class: "block text-sm font-medium text-gray-700 mb-2" %>
+              <%= form.text_field :first_name, 
+                  class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" %>
+            </div>
+            
+            <!-- Last Name -->
+            <div>
+              <%= form.label :last_name, class: "block text-sm font-medium text-gray-700 mb-2" %>
+              <%= form.text_field :last_name, 
+                  class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" %>
+            </div>
+            
+            <!-- Email -->
+            <div>
+              <%= form.label :email, class: "block text-sm font-medium text-gray-700 mb-2" %>
+              <%= form.email_field :email, 
+                  class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" %>
+            </div>
+            
+            <!-- Phone -->
+            <div>
+              <%= form.label :phone, class: "block text-sm font-medium text-gray-700 mb-2" %>
+              <%= form.telephone_field :phone, 
+                  class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" %>
+            </div>
+          </div>
+          
+          <!-- Action Buttons -->
+          <div class="flex items-center justify-end space-x-4 mt-8 pt-6 border-t">
+            <%= link_to "Cancel", profile_path, class: "px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+            <%= form.submit "Update Profile", class: "px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    
+    <!-- Change Password Section -->
+    <div class="mt-8 bg-white shadow rounded-lg">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h2 class="text-lg font-medium text-gray-900">Change Password</h2>
+      </div>
+      
+      <div class="p-6">
+        <%= form_with model: @user, url: profile_path, method: :patch, local: true do |form| %>
+          <div class="space-y-4">
+            <div>
+              <%= form.label :current_password, class: "block text-sm font-medium text-gray-700 mb-2" %>
+              <%= form.password_field :current_password, 
+                  class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" %>
+            </div>
+            
+            <div>
+              <%= form.label :password, "New Password", class: "block text-sm font-medium text-gray-700 mb-2" %>
+              <%= form.password_field :password, 
+                  class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" %>
+            </div>
+            
+            <div>
+              <%= form.label :password_confirmation, "Confirm New Password", class: "block text-sm font-medium text-gray-700 mb-2" %>
+              <%= form.password_field :password_confirmation, 
+                  class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" %>
+            </div>
+            
+            <div class="flex justify-end">
+              <%= form.submit "Change Password", class: "px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

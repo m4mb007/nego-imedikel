@@ -26,5 +26,8 @@ module NegoImedikel
     
     # Asset pipeline configuration
     config.assets.paths << Rails.root.join("app", "assets", "builds")
+    
+    # Autoload services
+    config.autoload_paths << Rails.root.join("app", "services")
   end
 end

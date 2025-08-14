@@ -1,0 +1,122 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold">Manage Users</h1>
+    <div class="flex space-x-4">
+      <form class="flex">
+        <input type="text" name="search" placeholder="Search users..." 
+               value="<%= params[:search] %>" 
+               class="border border-gray-300 rounded-l px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-600">
+          Search
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Role Filter -->
+  <div class="mb-6">
+    <div class="flex space-x-2">
+      <%= link_to "All", admin_users_path, 
+          class: "px-4 py-2 rounded #{params[:role].blank? ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}" %>
+      <% User.roles.keys.each do |role| %>
+        <%= link_to role.titleize, admin_users_path(role: role), 
+            class: "px-4 py-2 rounded #{params[:role] == role ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}" %>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Users Table -->
+  <div class="bg-white rounded-lg shadow overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Verified</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <% @users.each do |user| %>
+          <tr>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 h-10 w-10">
+                  <div class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+                    <span class="text-gray-500 font-medium"><%= user.first_name.first.upcase %></span>
+                  </div>
+                </div>
+                <div class="ml-4">
+                  <div class="text-sm font-medium text-gray-900"><%= user.full_name %></div>
+                  <div class="text-sm text-gray-500"><%= user.email %></div>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                <%= case user.role
+                    when 'admin' then 'bg-red-100 text-red-800'
+                    when 'seller' then 'bg-blue-100 text-blue-800'
+                    when 'customer' then 'bg-green-100 text-green-800'
+                    end %>">
+                <%= user.role.titleize %>
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                <%= case user.status
+                    when 'active' then 'bg-green-100 text-green-800'
+                    when 'pending' then 'bg-yellow-100 text-yellow-800'
+                    when 'suspended' then 'bg-red-100 text-red-800'
+                    when 'banned' then 'bg-gray-100 text-gray-800'
+                    end %>">
+                <%= user.status.titleize %>
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              <% if user.verified? %>
+                <span class="text-green-600">✓ Verified</span>
+              <% else %>
+                <span class="text-gray-500">Not verified</span>
+              <% end %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <%= user.created_at.strftime("%B %d, %Y") %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+              <div class="flex space-x-2">
+                <%= link_to "View", admin_user_path(user), 
+                    class: "text-blue-600 hover:text-blue-900" %>
+                <%= link_to "Edit", edit_admin_user_path(user), 
+                    class: "text-indigo-600 hover:text-indigo-900" %>
+                <% unless user.verified? %>
+                  <%= button_to "Verify", verify_admin_user_path(user), 
+                      method: :patch, 
+                      class: "text-green-600 hover:text-green-900 bg-transparent border-none cursor-pointer" %>
+                <% end %>
+                <% if user.active? %>
+                  <%= button_to "Suspend", suspend_admin_user_path(user), 
+                      method: :patch, 
+                      class: "text-red-600 hover:text-red-900 bg-transparent border-none cursor-pointer" %>
+                <% elsif user.suspended? %>
+                  <%= button_to "Activate", activate_admin_user_path(user), 
+                      method: :patch, 
+                      class: "text-green-600 hover:text-green-900 bg-transparent border-none cursor-pointer" %>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <% if @users.respond_to?(:current_page) %>
+    <div class="mt-6">
+      <%= paginate @users %>
+    </div>
+  <% end %>
+</div>

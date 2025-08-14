@@ -1,15 +1,15 @@
 FactoryBot.define do
   factory :address do
-    user { nil }
-    label { "MyString" }
-    recipient_name { "MyString" }
-    phone { "MyString" }
-    address_line1 { "MyString" }
-    address_line2 { "MyString" }
-    city { "MyString" }
-    state { "MyString" }
-    postal_code { "MyString" }
-    country { "MyString" }
+    association :user
+    label { Faker::Address.community }
+    recipient_name { Faker::Name.name }
+    phone { Faker::PhoneNumber.phone_number }
+    address_line1 { Faker::Address.street_address }
+    address_line2 { Faker::Address.secondary_address }
+    city { Faker::Address.city }
+    state { Faker::Address.state }
+    postal_code { Faker::Address.zip_code }
+    country { Faker::Address.country }
     is_default { false }
   end
 end

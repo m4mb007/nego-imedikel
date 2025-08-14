@@ -1,0 +1,120 @@
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-8">Admin Dashboard</h1>
+  
+  <!-- Statistics Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white rounded-lg shadow p-6">
+      <h3 class="text-lg font-semibold text-gray-700">Total Users</h3>
+      <p class="text-3xl font-bold text-blue-600"><%= @total_users %></p>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow p-6">
+      <h3 class="text-lg font-semibold text-gray-700">Total Stores</h3>
+      <p class="text-3xl font-bold text-green-600"><%= @total_stores %></p>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow p-6">
+      <h3 class="text-lg font-semibold text-gray-700">Total Products</h3>
+      <p class="text-3xl font-bold text-purple-600"><%= @total_products %></p>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow p-6">
+      <h3 class="text-lg font-semibold text-gray-700">Total Orders</h3>
+      <p class="text-3xl font-bold text-orange-600"><%= @total_orders %></p>
+    </div>
+  </div>
+  
+  <!-- Recent Activity -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Recent Orders -->
+    <div class="bg-white rounded-lg shadow">
+      <div class="p-6 border-b">
+        <h2 class="text-xl font-semibold">Recent Orders</h2>
+      </div>
+      <div class="p-6">
+        <% if @recent_orders.any? %>
+          <div class="space-y-4">
+            <% @recent_orders.each do |order| %>
+              <div class="flex justify-between items-center py-2 border-b">
+                <div>
+                  <p class="font-medium">Order #<%= order.id %></p>
+                  <p class="text-sm text-gray-600"><%= order.user&.email %></p>
+                </div>
+                <div class="text-right">
+                  <p class="font-medium">$<%= number_with_precision(order.total_amount, precision: 2) %></p>
+                  <p class="text-sm text-gray-600"><%= order.status %></p>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-gray-500">No recent orders</p>
+        <% end %>
+      </div>
+    </div>
+    
+    <!-- Pending Stores -->
+    <div class="bg-white rounded-lg shadow">
+      <div class="p-6 border-b">
+        <h2 class="text-xl font-semibold">Pending Store Approvals</h2>
+      </div>
+      <div class="p-6">
+        <% if @pending_stores.any? %>
+          <div class="space-y-4">
+            <% @pending_stores.each do |store| %>
+              <div class="flex justify-between items-center py-2 border-b">
+                <div>
+                  <p class="font-medium"><%= store.name %></p>
+                  <p class="text-sm text-gray-600"><%= store.user&.email %></p>
+                </div>
+                <div>
+                  <%= link_to "Review", admin_store_path(store), class: "text-blue-600 hover:text-blue-800" %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-gray-500">No pending store approvals</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Quick Actions -->
+  <div class="mt-8 bg-white rounded-lg shadow p-6">
+    <h2 class="text-xl font-semibold mb-4">Quick Actions</h2>
+    <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
+      <%= link_to admin_users_path, class: "bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 text-center" do %>
+        Manage Users
+      <% end %>
+      <%= link_to admin_stores_path, class: "bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 text-center" do %>
+        Manage Stores
+      <% end %>
+      <%= link_to admin_products_path, class: "bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 text-center" do %>
+        Manage Products
+      <% end %>
+      <%= link_to admin_rewards_path, class: "bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 text-center" do %>
+        Manage Rewards
+      <% end %>
+      <%= link_to admin_mlm_index_path, class: "bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600 text-center" do %>
+        MLM System
+      <% end %>
+      <%= link_to admin_settings_path, class: "bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 text-center font-bold" do %>
+        ⚙️ Settings
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Settings Section -->
+  <div class="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 class="text-lg font-semibold text-yellow-800">System Settings</h3>
+        <p class="text-sm text-yellow-700">Configure application settings including rewards system</p>
+      </div>
+      <%= link_to admin_settings_path, class: "bg-yellow-500 text-white px-6 py-3 rounded-lg hover:bg-yellow-600 font-medium" do %>
+        ⚙️ Go to Settings
+      <% end %>
+    </div>
+  </div>
+</div>

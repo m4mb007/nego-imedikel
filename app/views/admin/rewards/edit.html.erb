@@ -1,0 +1,111 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-2xl mx-auto">
+    <div class="flex items-center justify-between mb-8">
+      <h1 class="text-3xl font-bold">Edit Rewards Configuration</h1>
+      <%= link_to admin_rewards_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" do %>
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Back to Rewards
+      <% end %>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+      <%= form_with url: admin_rewards_path, method: :patch, local: true do |form| %>
+        <div class="space-y-6">
+          <!-- Points per RM1 -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Points per RM1 Spent
+            </label>
+            <div class="flex items-center">
+              <%= form.number_field "config[points_per_ringgit]", 
+                  value: @config[:points_per_ringgit], 
+                  min: 0, 
+                  max: 10, 
+                  step: 0.1,
+                  class: "flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" %>
+              <span class="ml-2 text-sm text-gray-500">points per RM1</span>
+            </div>
+            <p class="mt-1 text-sm text-gray-500">
+              How many points a customer earns for every RM1 spent on their order.
+            </p>
+          </div>
+
+          <!-- Redemption Percentage -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Maximum Redemption Percentage
+            </label>
+            <div class="flex items-center">
+              <%= form.number_field "config[redemption_percentage]", 
+                  value: @config[:redemption_percentage], 
+                  min: 0, 
+                  max: 100, 
+                  step: 1,
+                  class: "flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" %>
+              <span class="ml-2 text-sm text-gray-500">% of order value</span>
+            </div>
+            <p class="mt-1 text-sm text-gray-500">
+              Maximum percentage of an order's value that can be paid using points.
+            </p>
+          </div>
+
+          <!-- Points to RM Ratio -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Points to RM Conversion Ratio
+            </label>
+            <div class="flex items-center">
+              <%= form.number_field "config[points_to_ringgit_ratio]", 
+                  value: @config[:points_to_ringgit_ratio], 
+                  min: 1, 
+                  max: 1000, 
+                  step: 1,
+                  class: "flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" %>
+              <span class="ml-2 text-sm text-gray-500">points = RM1</span>
+            </div>
+            <p class="mt-1 text-sm text-gray-500">
+              How many points are equivalent to RM1 when redeeming for discounts.
+            </p>
+          </div>
+
+          <!-- Minimum Redemption Amount -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Minimum Points for Redemption
+            </label>
+            <div class="flex items-center">
+              <%= form.number_field "config[min_redemption_amount]", 
+                  value: @config[:min_redemption_amount], 
+                  min: 0, 
+                  step: 1,
+                  class: "flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" %>
+              <span class="ml-2 text-sm text-gray-500">points</span>
+            </div>
+            <p class="mt-1 text-sm text-gray-500">
+              Minimum number of points required before a customer can redeem them.
+            </p>
+          </div>
+
+          <!-- Configuration Summary -->
+          <div class="bg-gray-50 rounded-lg p-4">
+            <h3 class="text-sm font-medium text-gray-700 mb-2">Configuration Summary</h3>
+            <div class="text-sm text-gray-600 space-y-1">
+              <p>• Customers earn <span class="font-medium"><%= @config[:points_per_ringgit] %></span> point(s) per RM1 spent</p>
+              <p>• Can redeem up to <span class="font-medium"><%= @config[:redemption_percentage] %>%</span> of order value</p>
+              <p>• <span class="font-medium"><%= @config[:points_to_ringgit_ratio] %></span> points = RM1 when redeeming</p>
+              <p>• Minimum <span class="font-medium"><%= @config[:min_redemption_amount] %></span> points required for redemption</p>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex items-center justify-end space-x-4 pt-6 border-t">
+            <%= link_to "Cancel", admin_rewards_path, class: "px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+            <%= form.submit "Update Configuration", class: "px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

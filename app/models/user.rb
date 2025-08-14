@@ -9,6 +9,8 @@ class User < ApplicationRecord
 
   # Associations
   has_one :store, dependent: :destroy
+  has_one :reward_wallet, dependent: :destroy
+  has_one :referral_code, dependent: :destroy
   has_many :products, dependent: :destroy
   has_many :orders, dependent: :destroy
   has_many :cart_items, class_name: 'Cart', dependent: :destroy
@@ -16,6 +18,12 @@ class User < ApplicationRecord
   has_many :reviews, dependent: :destroy
   has_many :addresses, dependent: :destroy
   has_many :notifications, dependent: :destroy
+  
+  # MLM Associations
+  has_many :referrals, class_name: 'Referral', foreign_key: 'user_id', dependent: :destroy
+  has_many :referred_users, class_name: 'Referral', foreign_key: 'referrer_id', dependent: :destroy
+  has_many :mlm_commissions, class_name: 'MlmCommission', foreign_key: 'user_id', dependent: :destroy
+  has_many :earned_commissions, class_name: 'MlmCommission', foreign_key: 'referrer_id', dependent: :destroy
 
   # Validations
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
@@ -32,6 +40,10 @@ class User < ApplicationRecord
   scope :verified, -> { where.not(verified_at: nil) }
   scope :active_users, -> { where(status: :active) }
   scope :sellers, -> { where(role: :seller) }
+  scope :search, ->(query) { 
+    where("first_name ILIKE ? OR last_name ILIKE ? OR email ILIKE ?", 
+          "%#{query}%", "%#{query}%", "%#{query}%") if query.present?
+  }
 
   # Methods
   def full_name
@@ -64,6 +76,71 @@ class User < ApplicationRecord
 
   def cart_items_count
     cart_items.sum(:quantity)
+  end
+
+  def reward_wallet_or_create
+    reward_wallet || create_reward_wallet(points: 0)
+  end
+
+  def points_balance
+    reward_wallet_or_create.points
+  end
+
+  def add_points(amount, description = nil, order = nil)
+    reward_wallet_or_create.add_points(amount, description, order)
+  end
+
+  def deduct_points(amount, description = nil, order = nil)
+    reward_wallet_or_create.deduct_points(amount, description, order)
+  end
+
+  def can_redeem_points?(amount)
+    reward_wallet_or_create.can_redeem?(amount)
+  end
+
+  # MLM Methods
+  def referral_code_or_create
+    referral_code || create_referral_code
+  end
+
+  def referral_code_string
+    referral_code_or_create.code
+  end
+
+  def total_referrals
+    referred_users.active.count
+  end
+
+  def total_earnings
+    earned_commissions.paid.sum(:commission_amount)
+  end
+
+  def pending_earnings
+    earned_commissions.pending.sum(:commission_amount)
+  end
+
+  def total_commissions_by_level(level)
+    earned_commissions.by_level(level).paid.sum(:commission_amount)
+  end
+
+  def referral_tree
+    {
+      level1: referred_users.by_level(1).active.includes(:user),
+      level2: referred_users.by_level(2).active.includes(:user),
+      level3: referred_users.by_level(3).active.includes(:user)
+    }
+  end
+
+  def can_refer_user?(user)
+    return false if user == self
+    return false if referrals.exists?(referrer: user)
+    return false if referred_users.exists?(user: user)
+    true
+  end
+
+  def refer_user(user, referral_code)
+    return false unless can_refer_user?(user)
+    Referral.create_referral_chain(user, self, referral_code)
   end
 
   def self.from_omniauth(auth)

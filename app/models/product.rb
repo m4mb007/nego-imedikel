@@ -38,11 +38,19 @@ class Product < ApplicationRecord
   scope :popular, -> { joins(:reviews).group('products.id').order('AVG(reviews.rating) DESC') }
   scope :price_range, ->(min, max) { where(price: min..max) }
   scope :by_brand, ->(brand) { where(brand: brand) }
+  scope :search, ->(query) { 
+    where("name ILIKE ? OR description ILIKE ? OR brand ILIKE ? OR sku ILIKE ?", 
+          "%#{query}%", "%#{query}%", "%#{query}%", "%#{query}%") if query.present?
+  }
 
   # Money configuration
   # monetize :price_cents
 
   # Methods
+  def active?
+    status == 'active'
+  end
+
   def available?
     active? && stock_quantity > 0
   end

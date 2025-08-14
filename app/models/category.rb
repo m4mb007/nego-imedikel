@@ -24,6 +24,10 @@ class Category < ApplicationRecord
   scope :root_categories, -> { where(parent_id: nil) }
   scope :ordered, -> { order(:position, :name) }
   scope :with_products, -> { joins(:products).distinct }
+  scope :search, ->(query) { 
+    where("name ILIKE ? OR description ILIKE ?", 
+          "%#{query}%", "%#{query}%") if query.present?
+  }
 
   # Methods
   def root?
@@ -32,6 +36,10 @@ class Category < ApplicationRecord
 
   def leaf?
     subcategories.empty?
+  end
+
+  def active?
+    status == 'active'
   end
 
   def has_products?

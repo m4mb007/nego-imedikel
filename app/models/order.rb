@@ -28,6 +28,12 @@ class Order < ApplicationRecord
   scope :completed, -> { where(status: :delivered) }
   scope :pending_payment, -> { where(payment_status: :pending) }
   scope :paid, -> { where(payment_status: :paid) }
+  scope :search, ->(query) { 
+    joins(:user, :store).where(
+      "orders.order_number ILIKE ? OR users.email ILIKE ? OR stores.name ILIKE ?", 
+      "%#{query}%", "%#{query}%", "%#{query}%"
+    ) if query.present?
+  }
 
   # Money configuration
   # monetize :total_amount_cents
@@ -58,6 +64,10 @@ class Order < ApplicationRecord
 
   def total_items
     order_items.sum(:quantity)
+  end
+
+  def completed?
+    status == 'delivered'
   end
 
   def can_cancel?
@@ -110,6 +120,8 @@ class Order < ApplicationRecord
   def deliver!
     update(status: :delivered, delivered_at: Time.current)
     send_delivery_notification
+    award_points_after_delivery
+    calculate_mlm_commission
   end
 
   def refund!(amount = nil)
@@ -123,6 +135,43 @@ class Order < ApplicationRecord
   def mark_as_paid!
     update(payment_status: :paid, paid_at: Time.current)
     send_payment_confirmation
+  end
+
+  def award_points_after_delivery
+    return unless completed?
+    RewardsService.award_points_for_order(self)
+  end
+
+  def points_earned
+    RewardsService.calculate_points_for_order(self)
+  end
+
+  def max_points_redemption
+    return 0 unless user
+    RewardsService.calculate_max_redemption_amount(total_amount, user.points_balance)
+  end
+
+  def can_redeem_points?(points_to_redeem)
+    return false unless user
+    RewardsService.can_redeem_points?(user.points_balance, total_amount, points_to_redeem)
+  end
+
+  def redeem_points(points_to_redeem)
+    return false unless user
+    RewardsService.redeem_points_for_order(user, points_to_redeem, self)
+  end
+
+  def calculate_mlm_commission
+    return unless completed?
+    MlmService.calculate_commission_for_order(self)
+  end
+
+  def void_mlm_commissions
+    MlmCommission.void_commissions_for_order(self)
+  end
+
+  def cancel_mlm_commissions
+    MlmCommission.cancel_commissions_for_order(self)
   end
 
   def status_timeline
