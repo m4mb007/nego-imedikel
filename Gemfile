@@ -43,7 +43,7 @@ gem "ransack", "~> 4.1"
 gem "elasticsearch-rails", "~> 7.0"
 
 # Notifications and Communication
-gem "twilio-ruby", "~> 6.0"
+gem "twilio-ruby", "~> 7.7"
 gem "sendgrid-ruby", "~> 6.0"
 gem "fcm", "~> 1.0"
 
