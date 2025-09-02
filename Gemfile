@@ -40,7 +40,7 @@ gem "rack-cors", "~> 2.0"
 
 # Search and Filtering
 gem "ransack", "~> 4.1"
-gem "elasticsearch-rails", "~> 7.0"
+gem "elasticsearch-rails", "~> 8.0"
 
 # Notifications and Communication
 gem "twilio-ruby", "~> 6.0"
